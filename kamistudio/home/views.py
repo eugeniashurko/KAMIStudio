@@ -51,6 +51,7 @@ def import_hierarchy():
     if request.method == 'GET':
         return render_template('import_hierarchy.html')
     elif request.method == 'POST':
+        print("\n\nHERE")
         # check if the post request has the file part
         h_name = request.form['hierarchy_name']
         if 'file' not in request.files:
@@ -65,11 +66,9 @@ def import_hierarchy():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('home.imported_hierarchy',
-                                    filename=filename, name=h_name))
+            return imported_hierarchy(filename, h_name)
 
 
-@home_blueprint.route("/imported_hierarchy?<filename>&<name>")
 def imported_hierarchy(filename, name):
     new_hierarchy = KamiHierarchy.load(
         os.path.join(app.config['UPLOAD_FOLDER'], filename))
